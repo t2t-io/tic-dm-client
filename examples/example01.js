@@ -48,4 +48,5 @@ c.on('peripheral_updated', function(profile, identity, p_type, p_id, version, st
     LOG(`\t\tmetadata => ${(JSON.stringify(metadata)).magenta}`);
 });
 
+console.log(`connecting to ${server}`);
 c.connect();
