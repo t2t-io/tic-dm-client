@@ -1,0 +1,40 @@
+{
+  "name": "tic-dm-client",
+  "author": {
+    "name": "yagamy",
+    "email": "yagamy@t2t.io"
+  },
+  "description": "Nodejs client library for Device Management Server in Tic (TicTacToe3)",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "engines": {
+    "node": "4.4.x"
+  },
+  "main": "lib/client.js",
+  "scripts": {
+    "build": "mkdir -p ./lib && \\\nnode ./node_modules/browserify/bin/cmd.js \\\n  --node \\\n  --extension=ls \\\n  -t browserify-livescript \\\n  --standalone Client \\\n  --external=\"socket.io-client\" \\\n  --outfile ./lib/client.js \\\n  ./src/client-nodejs.ls",
+    "test": "dms db delete sandbox && lsc -c ./tests/*.ls && ava --verbose"
+  },
+  "dependencies": {
+    "colors": "*",
+    "async": "*",
+    "lodash": "*",
+    "moment": "*",
+    "socket.io-client": "*"
+  },
+  "devDependencies": {
+    "browserify": "*",
+    "browserify-livescript": "*"
+  },
+  "keywords": [
+    "tic",
+    "dm",
+    "registry",
+    "client",
+    "library"
+  ],
+  "license": "MIT"
+}
