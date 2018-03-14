@@ -55,7 +55,7 @@ function run {
 	[ "" == "${PROFILE}" ] && echo "please specify PROFILE" && exit 3
 	export URL="https://tic-dm.t2t.io/api/v3/nodes"
 
-	local NODES=($(http -a conscious-cloud-agent:NM154JGX7GA ${URL}/${PROFILE} | jq ".data | @csv" | sed 's/"//g' | sed 's/\\//g' | tr ',' '\n'))
+	local NODES=($(http --ignore-stdin --check-status -a ${USER}:${PSWD} ${URL}/${PROFILE} | jq ".data | @csv" | sed 's/"//g' | sed 's/\\//g' | tr ',' '\n'))
 
 	local TMP_FILE=$(mktemp /tmp/XXXXXX)
 	for name in identity token serial_number macaddr_eth macaddr_usb macaddr_wlan device_name local_address; do
