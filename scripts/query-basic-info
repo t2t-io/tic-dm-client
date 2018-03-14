@@ -1,0 +1,72 @@
+#!/bin/bash
+#
+
+function get_value {
+	cat ${JSON_FILE} | jq ".data" | jq ".$1"
+}
+
+function dump_node_info {
+	local ID=$1
+	local TMP_FILE=$(mktemp /tmp/XXXXXX)
+	
+	http \
+		-a ${USER}:${PSWD} \
+		--ignore-stdin \
+		--check-status \
+		${URL}/${PROFILE}/${ID} > ${TMP_FILE}
+
+	[ "0" != "$?" ] && echo "failed to get data for ${ID}" && exit 10
+	
+	for name in identity token serial_number macaddr_eth macaddr_usb macaddr_wlan; do
+		local VALUE=$(cat ${TMP_FILE} | jq ".data | .${name}" | sed 's/"//g')
+		eval $name="${VALUE}"
+	done
+	rm -f ${TMP_FILE}
+
+	http \
+		-a ${USER}:${PSWD} \
+		--ignore-stdin \
+		--check-status \
+		${URL}/${PROFILE}/${ID}/peripherals \
+		format==tree \
+	> ${TMP_FILE}
+
+	[ "0" != "$?" ] && echo "failed to get peripheral data for ${ID}" && exit 11
+
+	for name in device_name local_address; do
+		local VALUE=$(cat ${TMP_FILE} | jq ".data | .blemoboard.ttyO3.metadata.bluetooth.${name}" | sed 's/"//g')
+		eval $name="${VALUE}"
+	done
+	rm -f ${TMP_FILE}
+
+	for name in identity token serial_number macaddr_eth macaddr_usb macaddr_wlan device_name local_address; do
+		echo ${!name} >> ${TMP_FILE}
+	done
+	cat ${TMP_FILE} | tr '\n' ',' | sed 's/,$//g'
+	rm -f ${TMP_FILE}
+
+	# http -a conscious-cloud-agent:NM154JGX7GA https://tic-dm.t2t.io/api/v3/nodes/conscious/
+}
+
+
+function run {
+	[ "" == "${USER}" ] && echo "please specify USER to login TiC DM server" && exit 1
+	[ "" == "${PSWD}" ] && echo "please specify PSWD (password) to login TiC DM server" && exit 2
+	[ "" == "${PROFILE}" ] && echo "please specify PROFILE" && exit 3
+	export URL="https://tic-dm.t2t.io/api/v3/nodes"
+
+	local NODES=($(http -a conscious-cloud-agent:NM154JGX7GA ${URL}/${PROFILE} | jq ".data | @csv" | sed 's/"//g' | sed 's/\\//g' | tr ',' '\n'))
+
+	local TMP_FILE=$(mktemp /tmp/XXXXXX)
+	for name in identity token serial_number macaddr_eth macaddr_usb macaddr_wlan device_name local_address; do
+		echo ${name} >> ${TMP_FILE}
+	done
+	cat ${TMP_FILE} | tr '\n' ',' | sed 's/,$//g'
+	rm -f ${TMP_FILE}
+
+	for n in "${NODES[@]}"; do
+		dump_node_info $n
+	done
+}
+
+run
