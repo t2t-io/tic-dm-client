@@ -56,6 +56,10 @@ class Client extends WSC
     @.debug "peripheral_updated: #{profile}/#{identity}/#{peripheral_type}/#{peripheral_id}: version:#{version} state:#{state} metadata=>\n#{JSON.stringify metadata, null, '  '}"
     @ee.emit \peripheral_updated, profile, identity, peripheral_type, peripheral_id, version, state, metadata
 
+  process_data_production_updated: (evts, profile, hostname) ->
+    @.debug "production_updated: #{profile}/#{hostname}"
+    @ee.emit \production_updated, profile, hostname, evts
+
   on: (evt, listener) ->
     return @ee.on evt, listener
 
