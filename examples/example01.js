@@ -47,8 +47,11 @@ c.on('peripheral_updated', function(profile, identity, p_type, p_id, version, st
     LOG(`\t\tversion:${version.green} state:${state}`);
     LOG(`\t\tmetadata => ${(JSON.stringify(metadata)).magenta}`);
 });
-c.on('production_updated', function(profile, hostname, evts) {
-    LOG(`${profile.gray}: ${hostname.yellow} => ${JSON.stringify(evts)}`);
+c.on('production_updated', function(profile, hostname, idx, evts) {
+    LOG(`${profile.gray}: ${hostname.yellow} => ${idx}`);
+    for (var ev of evts) {
+        LOG(`\t${JSON.stringify(ev)}`);
+    }
 });
 
 console.log(`connecting to ${server}`);
