@@ -40,29 +40,19 @@ main: \lib/client.js
 scripts:
   build: """
     mkdir -p ./lib && \\
-    node ./node_modules/browserify/bin/cmd.js \\
-      --node \\
-      --extension=ls \\
-      -t browserify-livescript \\
-      --standalone Client \\
-      --external="socket.io-client" \\
-      --outfile ./lib/client.js \\
-      ./src/client-nodejs.ls
+    cat src/client-nodejs.ls | node_modules/livescript/bin/lsc -cp > lib/client.js
   """
-
-  test: "dms db delete sandbox && lsc -c ./tests/*.ls && ava --verbose"
 
 dependencies:
   colors: \*
   async: \*
   lodash: \*
   moment: \*
+  yapps: \yagamy4680/yapps
   \socket.io-client : \*
 
-
 devDependencies:
-  browserify: \*
-  \browserify-livescript : \*
+  livescript: \1.5.0
 
 keywords: <[tic dm registry client library]>
 

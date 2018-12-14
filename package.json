@@ -15,19 +15,18 @@
   },
   "main": "lib/client.js",
   "scripts": {
-    "build": "mkdir -p ./lib && \\\nnode ./node_modules/browserify/bin/cmd.js \\\n  --node \\\n  --extension=ls \\\n  -t browserify-livescript \\\n  --standalone Client \\\n  --external=\"socket.io-client\" \\\n  --outfile ./lib/client.js \\\n  ./src/client-nodejs.ls",
-    "test": "dms db delete sandbox && lsc -c ./tests/*.ls && ava --verbose"
+    "build": "mkdir -p ./lib && \\\ncat src/client-nodejs.ls | node_modules/livescript/bin/lsc -cp > lib/client.js"
   },
   "dependencies": {
     "colors": "*",
     "async": "*",
     "lodash": "*",
     "moment": "*",
+    "yapps": "yagamy4680/yapps",
     "socket.io-client": "*"
   },
   "devDependencies": {
-    "browserify": "*",
-    "browserify-livescript": "*"
+    "livescript": "1.5.0"
   },
   "keywords": [
     "tic",

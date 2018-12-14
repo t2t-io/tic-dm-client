@@ -11,7 +11,7 @@ global.get-logger = (name) ->
     WARN: console.log
     INFO: console.log
 
-WSC = require \../externals/yapps/lib/classes/web/wss-client-core
+WSC = require 'yapps/lib/classes/web/wss-client-core'
 
 
 class Skeleton

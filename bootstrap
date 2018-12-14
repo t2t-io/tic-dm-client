@@ -1,5 +1,0 @@
-#!/bin/bash
-#
-[ ! -d "$(dirname $0)/externals" ] && mkdir -p $(dirname $0)/externals
-[ ! -d "$(dirname $0)/externals/yapps" ] && git clone https://github.com/yagamy4680/yapps $(dirname $0)/externals/yapps
-[ ! -d "$(dirname $0)/node_modules" ] && npm install
